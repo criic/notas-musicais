@@ -5,6 +5,7 @@ description = ""
 authors = ["Cristiano Coutinho <coutinho.cristiano@gmail.com>"]
 readme = "README.md"
 
+packages = [{include = "notas_musicais"}]
 [tool.poetry.dependencies]
 python = "^3.12"
 
@@ -22,3 +23,19 @@ taskipy = "^1.13.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "--doctest-modules"
+
+profile = "black"
+[tool.isort]
+line_length = 79
+
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+pre_test = "test lint"
+test = "pytest -s -x --cov=notas_musicais -vv"
+pos_test = "coverage html"
+testall = "task lint & task test & task pos_test"
